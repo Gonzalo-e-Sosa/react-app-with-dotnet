@@ -1,0 +1,20 @@
+{
+  // Hereda todas las opciones de compilación de la app
+  "extends": "./tsconfig.app.json",
+
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.testing.tsbuildinfo",
+
+    // Asegura que reconoce los globals de Vitest
+    "types": [ "vitest/globals" ],
+
+    // Necesario para que funcione bien JSX en tests
+    "jsx": "react-jsx"
+  },
+
+  // Solo compila lo necesario para testing
+  "include": [
+    "__tests__",
+    "./vitest.config.ts"
+  ]
+}
