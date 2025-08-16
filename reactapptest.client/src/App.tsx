@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useFetch } from './hooks/useFetch';
+import { useState } from 'react';
+import { useTimer } from './hooks/useTimer';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
@@ -20,45 +22,79 @@ interface Forecast {
     summary: string;
 }
 
-function App() {
-    const [forecasts, setForecasts] = useState<Forecast[]>();
+export default function App() {
+    const { data: forecasts, loading, error, refetch, abort } = useFetch<Forecast[]>(
+        'https://localhost:32775/WeatherForecast',
+        undefined,
+        []
+    );
 
-    useEffect(() => {
-        populateWeatherData();
-    }, []);
+    const [showCancel, setShowCancel] = useState(false);
+    useTimer(
+        () => setShowCancel(true),
+        loading ? 60000 : null,
+        [loading]
+    );
+    // Reset showCancel when not loading
+    if (!loading && showCancel) setShowCancel(false);
 
-    const contents = forecasts === undefined
-        ? <Box display="flex" flexDirection="column" alignItems="center" mt={4}>
-            <CircularProgress />
-            <Typography variant="body1" mt={2} sx={{ textWrap: "balance" }}>
-                Loading... Please refresh once the ASP.NET backend has started. See{' '}
-                <Link href="https://aka.ms/jspsintegrationreact" target="_blank" rel="noopener">
-                    https://aka.ms/jspsintegrationreact
-                </Link>{' '}for more details.
-            </Typography>
-        </Box>
-        : <TableContainer component={Paper}>
-            <Table aria-label="Weather forecast table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Date</TableCell>
-                        <TableCell>Temp. (C)</TableCell>
-                        <TableCell>Temp. (F)</TableCell>
-                        <TableCell>Summary</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {forecasts.map(forecast => (
-                        <TableRow key={forecast.date}>
-                            <TableCell>{forecast.date}</TableCell>
-                            <TableCell>{forecast.temperatureC}</TableCell>
-                            <TableCell>{forecast.temperatureF}</TableCell>
-                            <TableCell>{forecast.summary}</TableCell>
+    let contents;
+    if (loading) {
+        contents = (
+            <Box display="flex" flexDirection="column" alignItems="center" mt={4}>
+                <CircularProgress />
+                <Typography variant="body1" mt={2} sx={{ textWrap: "balance" }}>
+                    Loading... Please refresh once the ASP.NET backend has started. See{' '}
+                    <Link href="https://aka.ms/jspsintegrationreact" target="_blank" rel="noopener">
+                        https://aka.ms/jspsintegrationreact
+                    </Link>{' '}for more details.
+                </Typography>
+                {showCancel && (
+                    <Box mt={2}>
+                        <button onClick={abort}>Cancel</button>
+                    </Box>
+                )}
+            </Box>
+        );
+    } else if (error) {
+        contents = (
+            <Box display="flex" flexDirection="column" alignItems="center" mt={4}>
+                <Typography color="error" variant="body1" mt={2}>
+                    Error: {error.message}
+                </Typography>
+                <Box mt={2}>
+                    <button onClick={refetch}>Retry</button>
+                </Box>
+            </Box>
+        );
+    } else if (forecasts) {
+        contents = (
+            <TableContainer component={Paper}>
+                <Table aria-label="Weather forecast table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Date</TableCell>
+                            <TableCell>Temp. (C)</TableCell>
+                            <TableCell>Temp. (F)</TableCell>
+                            <TableCell>Summary</TableCell>
                         </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>;
+                    </TableHead>
+                    <TableBody>
+                        {forecasts.map(forecast => (
+                            <TableRow key={forecast.date}>
+                                <TableCell>{forecast.date}</TableCell>
+                                <TableCell>{forecast.temperatureC}</TableCell>
+                                <TableCell>{forecast.temperatureF}</TableCell>
+                                <TableCell>{forecast.summary}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        );
+    } else {
+        contents = null;
+    }
 
     return (
         <Container maxWidth="md">
@@ -71,14 +107,4 @@ function App() {
             {contents}
         </Container>
     );
-
-    async function populateWeatherData() {
-        const response = await fetch('https://localhost:32775/WeatherForecast');
-        if (response.ok) {
-            const data = await response.json();
-            setForecasts(data);
-        }
-    }
 }
-
-export default App;
