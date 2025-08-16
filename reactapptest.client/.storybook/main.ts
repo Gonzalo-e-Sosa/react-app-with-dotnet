@@ -20,7 +20,7 @@ const config: StorybookConfig = {
   core: {
     disableTelemetry: true
   },
-  typescript: {
+  typescript: { // for MUI components props
     reactDocgen: 'react-docgen-typescript',
     reactDocgenTypescriptOptions: {
       compilerOptions: {
@@ -34,6 +34,7 @@ const config: StorybookConfig = {
           ? !/node_modules\/(?!@mui)/.test(prop.parent.fileName)
           : true,
     }
-  }
+  },
+  staticDirs: ['../public'], // To use mockServiceWorker of msw
 };
 export default config;
