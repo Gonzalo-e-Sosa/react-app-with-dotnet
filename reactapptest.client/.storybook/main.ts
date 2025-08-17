@@ -2,8 +2,8 @@ import type { StorybookConfig } from '@storybook/react-vite';
 
 const config: StorybookConfig = {
   stories: [
-    "../__tests__/**/*.mdx",
-    "../__tests__/**/*.stories.@(js|jsx|mjs|ts|tsx)"
+    "../__stories__/**/*.mdx",
+    "../__stories__/**/*.stories.@(js|jsx|mjs|ts|tsx)"
   ],
   addons: [
     "@chromatic-com/storybook",

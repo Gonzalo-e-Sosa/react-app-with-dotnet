@@ -9,12 +9,17 @@
     "types": [ "vitest/globals" ],
 
     // Necesario para que funcione bien JSX en tests
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
 
   // Solo compila lo necesario para testing
   "include": [
     "__tests__",
-    "./vitest.config.ts"
+    "./vitest.config.ts", 
+    "__stories__"
   ]
 }
