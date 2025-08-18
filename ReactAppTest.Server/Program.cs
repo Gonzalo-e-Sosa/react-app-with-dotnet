@@ -1,6 +1,18 @@
+
+using ReactAppTest.Server.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var AllowFrontendOrigin = "_AllowFrontendOrigin";
+
+
+// Add DbContext with SQL Server
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    )
+);
 
 // Add services to the container.
 
@@ -12,7 +24,7 @@ builder.Services.AddSwaggerGen();
 // CORS
 builder.Services.AddCors(options =>
 {
-    // Política para Desarrollo: permite el puerto del dev-server (usando IConfiguration)
+    // Polï¿½tica para Desarrollo: permite el puerto del dev-server (usando IConfiguration)
     if (builder.Environment.IsDevelopment())
     {
         var devServerPort = builder.Configuration["DEV_SERVER_PORT"] ?? "58585";
@@ -24,13 +36,13 @@ builder.Services.AddCors(options =>
                       .AllowAnyMethod();
             });
     }
-    // Política para Producción: permite el dominio de tu aplicación en producción
+    // Polï¿½tica para Producciï¿½n: permite el dominio de tu aplicaciï¿½n en producciï¿½n
     else
     {
         options.AddPolicy(AllowFrontendOrigin,
             policy =>
             {
-                policy.WithOrigins("https://mi-app.com") // <--- Reemplaza con tu dominio de producción
+                policy.WithOrigins("https://mi-app.com") // <--- Reemplaza con tu dominio de producciï¿½n
                       .AllowAnyHeader()
                       .AllowAnyMethod();
             });
