@@ -42,7 +42,7 @@ declare module '*.tiff' {
   export default value;
 }
 
-// Permite importar archivos JSON como módulos
+// Permite importar archivos JSON como mÃ³dulos
 declare module '*.json' {
   const value: unknown;
   export default value;
@@ -51,7 +51,7 @@ declare module '*.json' {
 // Declaraciones para variables de entorno personalizadas
 interface ImportMetaEnv {
   readonly VITE_API_URL: string;
-  // Añade aquí otras variables de entorno si es necesario
+  // AÃ±ade aquÃ­ otras variables de entorno si es necesario
 }
 
 interface ImportMeta {
