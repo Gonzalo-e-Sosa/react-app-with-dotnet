@@ -14,7 +14,7 @@
 		"indentWidth": 1,
 		"lineWidth": 120,
 		"lineEnding": "lf",
-		"includes": ["./src", "__tests__", "__stories__"]
+		"includes": ["./src/*", "./__tests__/*", "./__stories__/*"]
 	},
 	"linter": {
 		"enabled": false
