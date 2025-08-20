@@ -4,19 +4,21 @@ import { useFormContext } from "./FormContext";
 type FormProps = React.PropsWithChildren;
 
 function Form({ children }: FormProps) {
-    const store = useFormContext();
+	const store = useFormContext();
 
-    return (
-        <form onSubmit={(e) => {
-            e.preventDefault();
-            store.handleSubmit(() => {
-                console.log("Form submitted with data:", store.formData);
-            });
-        }}>
-            {/* Form fields go here */}
-            {children}
-        </form>
-    );
+	return (
+		<form
+			onSubmit={(e) => {
+				e.preventDefault();
+				store.handleSubmit(() => {
+					console.log("Form submitted with data:", store.formData);
+				});
+			}}
+		>
+			{/* Form fields go here */}
+			{children}
+		</form>
+	);
 }
 
 const ObserverForm = observer(Form);
